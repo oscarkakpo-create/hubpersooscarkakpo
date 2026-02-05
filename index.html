@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HUB FOAD PERSONNEL – CESAG (MBA AG & MBA GP) 2025–2026</title>
+  <title>HUB FOAD PERSONNEL – CESAG (MBA AG, GP & MSCH) 2025–2026</title>
   <style>
     :root{
       --bg:#ffffff;
@@ -362,7 +362,7 @@
 <header>
   <div class="wrap">
     <div>
-      <h1>📌 HUB FOAD PERSONNEL – CESAG (MBA AG & MBA GP)</h1>
+      <h1>📌 HUB FOAD PERSONNEL – CESAG (MBA AG, GP & MSCH)</h1>
       <div class="sub">Pilotage interne • Année académique 2025–2026 • Version figée (Oscar)</div>
     </div>
     <div class="badge">✅ Usage interne • Données sauvegardées sur cet ordinateur (localStorage)</div>
@@ -375,11 +375,12 @@
   <div class="actionbar">
     <div class="row">
       <div class="left">
-        <a class="btn primary" href="https://cesagedu-my.sharepoint.com/:x:/g/personal/oscarkakpo_cesag_edu_sn/IQANRsOdWAqfQrga3m-nViDgAZ97y6t7YQMHDhceYmO93bA?e=RBcxg9" target="_blank" rel="noopener">
-          📊 OUVRIR LE FICHIER DE SUIVI GLOBAL
+        <a class="btn primary" href="https://cesagedu-my.sharepoint.com/:x:/g/personal/yendoutie_nakorgou_cesag_edu_sn/IQBUlwM4HPSRQ61VoINMQaSPAebIUYjOT30Boo6Fqga0syM?e=Qg66Yt" target="_blank" rel="noopener">
+          📊 OUVRIR LE FICHIER DE SUIVI MBA MSCH
         </a>
         <button class="btn brand" id="copyAG">📧 Copier mails MBA AG</button>
         <button class="btn brand" id="copyGP">📧 Copier mails MBA GP</button>
+        <button class="btn brand" id="copyMSCH">📧 Copier mails MBA MSCH</button>
       </div>
       <div class="right">
         <button class="btn ghost" id="exportJSON">💾 Exporter le suivi (JSON)</button>
@@ -390,6 +391,7 @@
       <span class="mini">📌 Contacts :</span>
       <span class="mini"><strong>MBA AG</strong> : <span style="font-family:var(--mono)">entmbaagdistance2526@cesag.edu.sn</span></span>
       <span class="mini"><strong>MBA GP</strong> : <span style="font-family:var(--mono)">entmbagpdistance2526@cesag.edu.sn</span></span>
+      <span class="mini"><strong>MBA MSCH</strong> : <span style="font-family:var(--mono)">entmbamsch2526@cesag.edu.sn</span></span>
     </div>
     <div class="toast" id="toast"></div>
   </div>
@@ -398,6 +400,7 @@
   <div class="tabs">
     <button class="tab active" data-tab="gp">MBA GP – Modules & suivi</button>
     <button class="tab" data-tab="ag">MBA AG – Modules & suivi</button>
+    <button class="tab" data-tab="msch">MBA MSCH – Modules & suivi</button>
   </div>
 
   <!-- PANEL GP -->
@@ -505,6 +508,60 @@
     </div>
   </section>
 
+  <!-- PANEL MSCH -->
+  <section id="panel-msch" class="panel">
+    <div class="toolbar">
+      <div class="group">
+        <input id="searchMSCH" type="search" placeholder="🔎 Rechercher (UE, module, mots-clés)..." />
+        <select id="moisMSCH">
+          <option value="ALL">Tous les mois</option>
+          <option value="MOIS 1">MOIS 1</option><option value="MOIS 2">MOIS 2</option><option value="MOIS 3">MOIS 3</option>
+          <option value="MOIS 4">MOIS 4</option><option value="MOIS 5">MOIS 5</option><option value="MOIS 6">MOIS 6</option>
+          <option value="MOIS 7">MOIS 7</option><option value="MOIS 8">MOIS 8</option><option value="MOIS 9">MOIS 9</option>
+          <option value="MOIS 10">MOIS 10</option><option value="MOIS 11">MOIS 11</option><option value="MOIS 12">MOIS 12</option>
+          <option value="MOIS 13">MOIS 13</option>
+          <option value="A PLANIFIER">À planifier</option>
+        </select>
+        <select id="blocMSCH">
+          <option value="ALL">Tous les blocs</option>
+          <option value="S1">Semestre 1</option>
+          <option value="S2">Semestre 2</option>
+        </select>
+      </div>
+      <div class="group">
+        <span class="mini" id="countMSCH">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="pill">MBA MSCH</span> Modules officiels + suivi interne</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:120px;">Bloc</th>
+              <th style="min-width:340px;">UE / Module</th>
+              <th style="min-width:120px;">Code</th>
+              <th>CM</th>
+              <th>TD/TP</th>
+              <th>Total</th>
+              <th>TPE</th>
+              <th>Crédits</th>
+              <th style="min-width:110px;">Début</th>
+              <th style="min-width:110px;">Fin</th>
+              <th style="min-width:90px;">Mois</th>
+              <th style="min-width:420px;">Suivi (statut + note)</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyMSCH"></tbody>
+        </table>
+      </div>
+      <div class="mini" style="margin-top:10px;">
+        ⚠️ Les anomalies de dates (fin antérieure au début) sont signalées automatiquement.
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <footer>
@@ -514,7 +571,16 @@
 
 <script>
 /* ============================
-   1) DONNÉES – MBA GP (EXHAUSTIF selon ta liste)
+   CONFIGURATION MODULAIRE – STRUCTURE POUR AJOUTER DE NOUVEAUX MBA
+   ============================ */
+
+// ============================================================================
+// SECTION 1 : DONNÉES DES MBA
+// Pour ajouter un nouveau MBA, créer une nouvelle constante ici
+// ============================================================================
+
+/* ============================
+   1A) DONNÉES – MBA GP (EXHAUSTIF selon ta liste)
    ============================ */
 const GP = [
   // S1
@@ -586,7 +652,7 @@ const GP = [
 ];
 
 /* ============================
-   2) DONNÉES – MBA AG (selon ton tableau texte)
+   1B) DONNÉES – MBA AG (selon ton tableau texte)
    ============================ */
 const AG = [
   // S1 – UE 1.1
@@ -624,7 +690,7 @@ const AG = [
   { type:"M", bloc:"S2-TC", ue:"UE 2.2", code:"MBAAG221", module:"Stage professionnel + rédaction de mémoire (4 mois minimum)", cm:"", td:"", total:"", tpe:160, credits:8, debut:"", fin:"", mois:"A PLANIFIER" },
 
   // Spécialisation GE
-  { type:"UE", bloc:"GE", ue:"UE 2.3 Outils de Gestion de l’entreprise (Spécialisation GE)", meta:"140h • 12 crédits", mois:"", debut:"", fin:"", credits:"12", cm:"", td:"", total:"", tpe:"" },
+  { type:"UE", bloc:"GE", ue:"UE 2.3 Outils de Gestion de l'entreprise (Spécialisation GE)", meta:"140h • 12 crédits", mois:"", debut:"", fin:"", credits:"12", cm:"", td:"", total:"", tpe:"" },
   { type:"M", bloc:"GE", ue:"UE 2.3", code:"MBAAG231", module:"Organisation et stratégie", cm:25, td:10, total:35, tpe:25, credits:3, debut:"20/08/2026", fin:"19/09/2026", mois:"MOIS 9" },
   { type:"M", bloc:"GE", ue:"UE 2.3", code:"MBAAG232", module:"Administration et Gestion des ressources humaines", cm:25, td:10, total:35, tpe:25, credits:3, debut:"20/07/2026", fin:"19/08/2026", mois:"MOIS 8" },
   { type:"M", bloc:"GE", ue:"UE 2.3", code:"MBAAG233", module:"Gestion financière", cm:25, td:10, total:35, tpe:25, credits:3, debut:"20/08/2026", fin:"19/09/2026", mois:"MOIS 9" },
@@ -636,13 +702,116 @@ const AG = [
   { type:"M", bloc:"AP", ue:"UE 2.4", code:"MBAAG242", module:"Acteurs et systèmes de protection sociale", cm:10, td:10, total:35, tpe:25, credits:3, debut:"20/07/2026", fin:"19/08/2026", mois:"MOIS 8" },
   { type:"M", bloc:"AP", ue:"UE 2.4", code:"MBAAG243", module:"Science administrative et droit administratif", cm:10, td:10, total:35, tpe:25, credits:3, debut:"20/07/2026", fin:"19/08/2026", mois:"MOIS 8" },
   { type:"M", bloc:"AP", ue:"UE 2.4", code:"MBAAG244", module:"Finances de l'État et Finances locales", cm:10, td:10, total:35, tpe:25, credits:3, debut:"20/08/2026", fin:"19/09/2026", mois:"MOIS 9" },
-  { type:"M", bloc:"AP", ue:"UE 2.4", code:"MBAAG245", module:"Gestion des ressources humaines dans l’administration publique", cm:10, td:10, total:35, tpe:25, credits:3, debut:"20/08/2026", fin:"19/09/2026", mois:"MOIS 9" },
+  { type:"M", bloc:"AP", ue:"UE 2.4", code:"MBAAG245", module:"Gestion des ressources humaines dans l'administration publique", cm:10, td:10, total:35, tpe:25, credits:3, debut:"20/08/2026", fin:"19/09/2026", mois:"MOIS 9" },
   { type:"M", bloc:"AP", ue:"UE 2.4", code:"MBAAG246", module:"Modernisation et digitalisation du service public", cm:10, td:10, total:35, tpe:25, credits:3, debut:"20/08/2026", fin:"19/09/2026", mois:"MOIS 9" },
 ];
 
 /* ============================
-   3) SUIVI LOCAL
+   1C) DONNÉES – MBA MSCH (Management de la Santé et de la Chaîne Hospitalière)
    ============================ */
+const MSCH = [
+  { type:"UE", bloc:"S1", ue:"UE 1.1 Comptabilité finance", meta:"30 / 25 / 55 / 40 • 4 crédits", mois:"", debut:"", fin:"", credits:"4", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S1", ue:"UE 1.1 Comptabilité finance", code:"MBAGRH111", module:"Comptabilité générale", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"06/02/2026", fin:"08/03/2026", mois:"MOIS 1" },
+  { type:"M", bloc:"S1", ue:"UE 1.1 Comptabilité finance", code:"MBAGRH112", module:"Comptabilité Analytique", cm:10, td:10, total:20, tpe:15, credits:1.0, debut:"09/03/2026", fin:"08/04/2026", mois:"MOIS 2" },
+  { type:"M", bloc:"S1", ue:"UE 1.1 Comptabilité finance", code:"MBAGRH113", module:"Finance d'entreprise", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"09/04/2026", fin:"09/05/2026", mois:"MOIS 3" },
+  { type:"UE", bloc:"S1", ue:"UE 1.2 Enseignements Propédeutiques", meta:"35 / 30 / 65 / 45 • 6 crédits", mois:"", debut:"", fin:"", credits:"6", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S1", ue:"UE 1.2 Enseignements Propédeutiques", code:"MBAGRH121", module:"Administration du Personnel", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"09/04/2026", fin:"09/05/2026", mois:"MOIS 3" },
+  { type:"M", bloc:"S1", ue:"UE 1.2 Enseignements Propédeutiques", code:"MBAGRH124", module:"Condition de Travail et Qualité de Vie", cm:5, td:5, total:10, tpe:5, credits:1.0, debut:"10/05/2026", fin:"09/05/2026", mois:"MOIS 4" },
+  { type:"M", bloc:"S1", ue:"UE 1.2 Enseignements Propédeutiques", code:"MBAGRH125", module:"Gestion des Compétences", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"10/05/2026", fin:"09/05/2026", mois:"MOIS 4" },
+  { type:"M", bloc:"S1", ue:"UE 1.2 Enseignements Propédeutiques", code:"MBAGRH126", module:"Communication Organisationnelle", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"10/05/2026", fin:"09/06/2026", mois:"MOIS 5" },
+  { type:"UE", bloc:"S1", ue:"UE1.3 Droit Social et Relations Professionnelles", meta:"40 / 35 / 75 / 55 • 7 crédits", mois:"", debut:"", fin:"", credits:"7", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S1", ue:"UE1.3 Droit Social et Relations Professionnelles", code:"MBAGRH131", module:"Conventions Internationales sur le Travail", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"06/02/2026", fin:"08/03/2026", mois:"MOIS 1" },
+  { type:"M", bloc:"S1", ue:"UE1.3 Droit Social et Relations Professionnelles", code:"MBAGRH132", module:"Droit de la Sécurité Sociale", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"09/03/2026", fin:"08/04/2026", mois:"MOIS 2" },
+  { type:"M", bloc:"S1", ue:"UE1.3 Droit Social et Relations Professionnelles", code:"MBAGRH133", module:"Normalisation et Management de la Qualité", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"10/05/2026", fin:"09/06/2026", mois:"MOIS 5" },
+  { type:"M", bloc:"S1", ue:"UE1.3 Droit Social et Relations Professionnelles", code:"MBAGRH134", module:"Droit du Travail", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"10/06/2026", fin:"10/07/2026", mois:"MOIS 6" },
+  { type:"UE", bloc:"S1", ue:"UE 1.4  Audit Social et Contrôle de Gestion", meta:"30 / 30 / 60 / 45 • 6 crédits", mois:"", debut:"", fin:"", credits:"6", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S1", ue:"UE 1.4  Audit Social et Contrôle de Gestion", code:"MBAGRH141", module:"Contrôle de Gestion Sociale", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"10/06/2026", fin:"10/07/2026", mois:"MOIS 6" },
+  { type:"M", bloc:"S1", ue:"UE 1.4  Audit Social et Contrôle de Gestion", code:"MBAGRH142", module:"Audit Social et Audit de la RSE", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"11/07/2026", fin:"09/08/2026", mois:"MOIS 7" },
+  { type:"M", bloc:"S1", ue:"UE 1.4  Audit Social et Contrôle de Gestion", code:"MBAGRH143", module:"Bilan Social", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"11/07/2026", fin:"09/08/2026", mois:"MOIS 7" },
+  { type:"UE", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", meta:"60 / 50 / 110 / 80 • 7 crédits", mois:"", debut:"", fin:"", credits:"7", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", code:"MBAGRH151", module:"Management de la Formation", cm:10, td:10, total:20, tpe:15, credits:1.0, debut:"11/07/2026", fin:"09/08/2026", mois:"MOIS 7" },
+  { type:"M", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", code:"MBAGRH152", module:"Théorie des organisations", cm:10, td:10, total:20, tpe:15, credits:1.0, debut:"10/08/2026", fin:"09/09/2026", mois:"MOIS 8" },
+  { type:"M", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", code:"MBAGRH153", module:"Appréciation des Performances du Personnel", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"10/08/2026", fin:"09/09/2026", mois:"MOIS 8" },
+  { type:"M", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", code:"MBAGRH153", module:"Recrutement et Intégration", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"10/08/2026", fin:"09/09/2026", mois:"MOIS 8" },
+  { type:"M", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", code:"MBAGRH154", module:"Management des Rémunérations", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"10/09/2026", fin:"10/10/2026", mois:"MOIS 9" },
+  { type:"M", bloc:"S1", ue:"UE 1.5  Management des Hommes et des Equipes", code:"MBAGRH155", module:"Logiciel Spécialisé de Paie", cm:10, td:10, total:20, tpe:15, credits:1.0, debut:"10/09/2026", fin:"10/10/2026", mois:"MOIS 9" },
+  { type:"UE", bloc:"S2", ue:"UE 2.1 Stratégie et Changement Organisationnel", meta:"30 / 20 / 50 / 35 • 6 crédits", mois:"", debut:"", fin:"", credits:"6", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S2", ue:"UE 2.1 Stratégie et Changement Organisationnel", code:"MBAGRH211", module:"Stratégie d'Entreprise et GRH", cm:10, td:5, total:15, tpe:10, credits:2.0, debut:"10/09/2026", fin:"10/10/2026", mois:"MOIS 9" },
+  { type:"M", bloc:"S2", ue:"UE 2.1 Stratégie et Changement Organisationnel", code:"MBAGRH212", module:"Diagnostic Organisationnel et Gestion du Changement", cm:10, td:5, total:15, tpe:10, credits:2.0, debut:"11/10/2026", fin:"10/11/2026", mois:"MOIS 10" },
+  { type:"M", bloc:"S2", ue:"UE 2.1 Stratégie et Changement Organisationnel", code:"MBAGRH213", module:"Gestion Prévisionnelle des Emplois et des Compétences", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"11/10/2026", fin:"10/11/2026", mois:"MOIS 10" },
+  { type:"UE", bloc:"S2", ue:"UE2.2 Gestion Internationale des RH", meta:"40 / 20 / 60 / 40 • 5 crédits", mois:"", debut:"", fin:"", credits:"5", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S2", ue:"UE2.2 Gestion Internationale des RH", code:"MBAGRH221", module:"Environnement Economique International et GRH", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"11/10/2026", fin:"10/11/2026", mois:"MOIS 10" },
+  { type:"M", bloc:"S2", ue:"UE2.2 Gestion Internationale des RH", code:"MBAGRH222", module:"Mobilité Internationale des Ressources Humaines", cm:10, td:5, total:15, tpe:10, credits:2.0, debut:"11/11/2026", fin:"11/12/2026", mois:"MOIS 11" },
+  { type:"M", bloc:"S2", ue:"UE2.2 Gestion Internationale des RH", code:"MBAGRH223", module:"Management Interculturel", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"11/11/2026", fin:"11/12/2026", mois:"MOIS 11" },
+  { type:"M", bloc:"S2", ue:"UE2.2 Gestion Internationale des RH", code:"MBAGRH224", module:"EGRH (e-recrutement, e-formation, ecommunication)", cm:10, td:5, total:15, tpe:10, credits:1.0, debut:"11/11/2026", fin:"11/12/2026", mois:"MOIS 11" },
+  { type:"UE", bloc:"S2", ue:"UE 2.3 Le Métier de Consultant en GRH", meta:"30 / 20 / 50 / 30 • 5 crédits", mois:"", debut:"", fin:"", credits:"5", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S2", ue:"UE 2.3 Le Métier de Consultant en GRH", code:"MBAGRH231", module:"Création et Gestion d'un Cabinet de Conseil en GRH", cm:10, td:5, total:15, tpe:10, credits:2.0, debut:"12/12/2026", fin:"11/01/2027", mois:"MOIS 12" },
+  { type:"M", bloc:"S2", ue:"UE 2.3 Le Métier de Consultant en GRH", code:"MBAGRH232", module:"Conduite d'une Mission d'Intervention en GRH", cm:5, td:5, total:10, tpe:5, credits:1.0, debut:"12/12/2026", fin:"11/01/2027", mois:"MOIS 12" },
+  { type:"M", bloc:"S2", ue:"UE 2.3 Le Métier de Consultant en GRH", code:"MBAGRH233", module:"Conception et Conduite d'un Projet", cm:15, td:10, total:25, tpe:15, credits:2.0, debut:"12/12/2026", fin:"11/01/2027", mois:"MOIS 12" },
+  { type:"UE", bloc:"S2", ue:"UE 2.4 Développement Personnel", meta:"45 / 35 / 80 / 55 • 8 crédits", mois:"", debut:"", fin:"", credits:"8", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S2", ue:"UE 2.4 Développement Personnel", code:"MBAGRH241", module:"Développement Personnel et Professionnel", cm:5, td:5, total:10, tpe:5, credits:1.0, debut:"12/01/2027", fin:"11/02/2027", mois:"MOIS 13" },
+  { type:"M", bloc:"S2", ue:"UE 2.4 Développement Personnel", code:"MBAGRH242", module:"Méthodologie de la recherche", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"", fin:"", mois:"A PLANIFIER" },
+  { type:"M", bloc:"S2", ue:"UE 2.4 Développement Personnel", code:"MBAGRH243", module:"Simulation d'Entreprises", cm:10, td:10, total:20, tpe:15, credits:2.0, debut:"12/01/2027", fin:"11/02/2027", mois:"MOIS 13" },
+  { type:"M", bloc:"S2", ue:"UE 2.4 Développement Personnel", code:"MBAGRH244", module:"Anglais des Affaires", cm:20, td:10, total:30, tpe:20, credits:3.0, debut:"09/04/2026", fin:"09/05/2026", mois:"MOIS 3" },
+  { type:"UE", bloc:"S2", ue:"UE 2.5 Stage et Mémoire", meta:"150h • 6 crédits", mois:"A PLANIFIER", debut:"", fin:"", credits:"6", cm:"", td:"", total:"", tpe:"" },
+  { type:"M", bloc:"S2", ue:"UE 2.5 Stage et Mémoire", code:"MBAGRH251", module:"Stage et Mémoire", cm:"", td:"", total:"", tpe:150, credits:6.0, debut:"", fin:"", mois:"A PLANIFIER" },
+];
+
+// ============================================================================
+// SECTION 2 : CONFIGURATION DES MBA
+// Pour ajouter un nouveau MBA, ajouter une entrée dans ce tableau
+// ============================================================================
+const MBA_CONFIG = {
+  GP: {
+    data: GP,
+    name: "MBA GP",
+    email: "entmbagpdistance2526@cesag.edu.sn",
+    tbodyId: "tbodyGP",
+    searchId: "searchGP",
+    moisId: "moisGP",
+    blocId: "blocGP",
+    countId: "countGP"
+  },
+  AG: {
+    data: AG,
+    name: "MBA AG",
+    email: "entmbaagdistance2526@cesag.edu.sn",
+    tbodyId: "tbodyAG",
+    searchId: "searchAG",
+    moisId: "moisAG",
+    blocId: "blocAG",
+    countId: "countAG"
+  },
+  MSCH: {
+    data: MSCH,
+    name: "MBA MSCH",
+    email: "entmbamsch2526@cesag.edu.sn",
+    tbodyId: "tbodyMSCH",
+    searchId: "searchMSCH",
+    moisId: "moisMSCH",
+    blocId: "blocMSCH",
+    countId: "countMSCH"
+  }
+  // POUR AJOUTER UN NOUVEAU MBA :
+  // 1. Créer la constante de données ci-dessus (ex: const NEWMBA = [...])
+  // 2. Ajouter ici :
+  // NEWMBA: {
+  //   data: NEWMBA,
+  //   name: "MBA NEWMBA",
+  //   email: "entmbanewmba2526@cesag.edu.sn",
+  //   tbodyId: "tbodyNEWMBA",
+  //   searchId: "searchNEWMBA",
+  //   moisId: "moisNEWMBA",
+  //   blocId: "blocNEWMBA",
+  //   countId: "countNEWMBA"
+  // }
+  // 3. Ajouter l'onglet dans le HTML
+  // 4. Ajouter le bouton de copie d'email dans l'action bar
+};
+
+// ============================================================================
+// SECTION 3 : SYSTÈME DE SUIVI LOCAL (COMMUN À TOUS LES MBA)
+// ============================================================================
 const TRACK_KEY = "CESAG_HUB_TRACKING_V1";
 function loadTracking(){
   try { return JSON.parse(localStorage.getItem(TRACK_KEY) || "{}"); }
@@ -653,7 +822,6 @@ function saveTracking(obj){
 }
 let tracking = loadTracking();
 
-/* status: RED/YELLOW/GREEN */
 function getTrack(code){
   if(!code) return {status:"RED", note:"", teacher:""};
   return tracking[code] || {status:"RED", note:"", teacher:""};
@@ -663,9 +831,9 @@ function setTrack(code, payload){
   saveTracking(tracking);
 }
 
-/* ============================
-   4) UTILITAIRES
-   ============================ */
+// ============================================================================
+// SECTION 4 : UTILITAIRES
+// ============================================================================
 function parseFRDate(ddmmyyyy){
   if(!ddmmyyyy || typeof ddmmyyyy !== "string" || !ddmmyyyy.includes("/")) return null;
   const [dd, mm, yyyy] = ddmmyyyy.split("/").map(x=>parseInt(x,10));
@@ -697,7 +865,6 @@ async function copyToClipboard(text){
     await navigator.clipboard.writeText(text);
     toast("✅ Copié dans le presse-papiers.");
   }catch(e){
-    // fallback
     const ta = document.createElement("textarea");
     ta.value = text;
     document.body.appendChild(ta);
@@ -708,9 +875,9 @@ async function copyToClipboard(text){
   }
 }
 
-/* ============================
-   5) RENDER
-   ============================ */
+// ============================================================================
+// SECTION 5 : MOTEUR DE RENDU (FONCTION GÉNÉRIQUE)
+// ============================================================================
 function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
   const tbody = document.getElementById(tbodyId);
   tbody.innerHTML = "";
@@ -721,13 +888,10 @@ function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
 
   data.forEach(row=>{
     if(row.type==="M") total++;
-
-    // filters apply only to module rows; UE rows kept only if a following module is shown
   });
 
-  // We build rows and decide if UE row should appear based on next module hits
   let currentUE = null;
-  let ueBuffer = null; // store UE row HTML until first module shown under it
+  let ueBuffer = null;
 
   const flushUE = () => {
     if(ueBuffer){
@@ -739,7 +903,6 @@ function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
   data.forEach(row=>{
     if(row.type==="UE"){
       currentUE = row.ue;
-      // buffer UE row; print only if at least one module under it passes filters
       ueBuffer = `
         <tr class="ueRow">
           <td colspan="12">📌 ${row.ue}${row.meta ? ` <span class="warnTag"> ${row.meta} </span>` : ""}</td>
@@ -748,7 +911,6 @@ function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
       return;
     }
 
-    // module row
     const textBlob = `${row.bloc} ${row.ue} ${row.code||""} ${row.module||""}`.toLowerCase();
     const mois = row.mois || "A PLANIFIER";
 
@@ -756,7 +918,6 @@ function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
     if(moisFilter && moisFilter !== "ALL" && mois !== moisFilter) return;
     if(q && !textBlob.includes(q)) return;
 
-    // passed filters
     flushUE();
     shown++;
 
@@ -811,12 +972,10 @@ function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
     `);
   });
 
-  // Attach listeners (delegation is simpler, but ok here)
   tbody.querySelectorAll(".trackStatus").forEach(sel=>{
     sel.addEventListener("change", (e)=>{
       const code = e.target.getAttribute("data-code");
       setTrack(code, {status: e.target.value});
-      // refresh badges quickly without full rerender
       renderAll();
       toast("✅ Statut mis à jour.");
     });
@@ -840,22 +999,20 @@ function renderTable(data, tbodyId, searchTerm, moisFilter, blocFilter){
 }
 
 function renderAll(){
-  const gpSearch = document.getElementById("searchGP").value;
-  const gpMois = document.getElementById("moisGP").value;
-  const gpBloc = document.getElementById("blocGP").value;
-  const gpStats = renderTable(GP, "tbodyGP", gpSearch, gpMois, gpBloc);
-  document.getElementById("countGP").textContent = `${gpStats.shown} / ${gpStats.total} modules affichés (GP)`;
-
-  const agSearch = document.getElementById("searchAG").value;
-  const agMois = document.getElementById("moisAG").value;
-  const agBloc = document.getElementById("blocAG").value;
-  const agStats = renderTable(AG, "tbodyAG", agSearch, agMois, agBloc);
-  document.getElementById("countAG").textContent = `${agStats.shown} / ${agStats.total} modules affichés (AG)`;
+  // Parcourir tous les MBA configurés
+  Object.keys(MBA_CONFIG).forEach(mbaKey => {
+    const config = MBA_CONFIG[mbaKey];
+    const search = document.getElementById(config.searchId).value;
+    const mois = document.getElementById(config.moisId).value;
+    const bloc = document.getElementById(config.blocId).value;
+    const stats = renderTable(config.data, config.tbodyId, search, mois, bloc);
+    document.getElementById(config.countId).textContent = `${stats.shown} / ${stats.total} modules affichés (${config.name})`;
+  });
 }
 
-/* ============================
-   6) TABS
-   ============================ */
+// ============================================================================
+// SECTION 6 : GESTION DES ONGLETS
+// ============================================================================
 document.querySelectorAll(".tab").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
@@ -874,16 +1031,21 @@ window.addEventListener("DOMContentLoaded", ()=>{
   }
 });
 
-/* ============================
-   7) ACTIONS – COPIE / EXPORT / RESET
-   ============================ */
+// ============================================================================
+// SECTION 7 : ACTIONS BOUTONS
+// ============================================================================
+// Copie d'emails
 document.getElementById("copyAG").addEventListener("click", ()=> {
-  copyToClipboard("entmbaagdistance2526@cesag.edu.sn");
+  copyToClipboard(MBA_CONFIG.AG.email);
 });
 document.getElementById("copyGP").addEventListener("click", ()=> {
-  copyToClipboard("entmbagpdistance2526@cesag.edu.sn");
+  copyToClipboard(MBA_CONFIG.GP.email);
+});
+document.getElementById("copyMSCH").addEventListener("click", ()=> {
+  copyToClipboard(MBA_CONFIG.MSCH.email);
 });
 
+// Export JSON
 document.getElementById("exportJSON").addEventListener("click", ()=>{
   const payload = {
     exportedAt: new Date().toISOString(),
@@ -899,6 +1061,7 @@ document.getElementById("exportJSON").addEventListener("click", ()=>{
   toast("✅ Export JSON généré.");
 });
 
+// Réinitialisation
 document.getElementById("resetTracking").addEventListener("click", ()=>{
   localStorage.removeItem(TRACK_KEY);
   tracking = {};
@@ -906,16 +1069,21 @@ document.getElementById("resetTracking").addEventListener("click", ()=>{
   toast("✅ Suivi local réinitialisé.");
 });
 
-/* ============================
-   8) FILTER LISTENERS
-   ============================ */
-["searchGP","moisGP","blocGP","searchAG","moisAG","blocAG"].forEach(id=>{
-  document.getElementById(id).addEventListener(id.startsWith("search") ? "input" : "change", renderAll);
+// ============================================================================
+// SECTION 8 : FILTRES & INITIALISATION
+// ============================================================================
+// Attacher les listeners de filtres pour chaque MBA
+Object.keys(MBA_CONFIG).forEach(mbaKey => {
+  const config = MBA_CONFIG[mbaKey];
+  [config.searchId, config.moisId, config.blocId].forEach(id=>{
+    const element = document.getElementById(id);
+    if(element) {
+      element.addEventListener(id.includes("search") ? "input" : "change", renderAll);
+    }
+  });
 });
 
-/* ============================
-   9) INIT
-   ============================ */
+// INITIALISATION
 renderAll();
 </script>
 
